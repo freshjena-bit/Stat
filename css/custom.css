@@ -1,0 +1,256 @@
+/* Custom styles for mobile optimizations */
+@media (max-width: 768px) {
+    .dropdown-button {
+        width: auto; /* чтобы уместились в одну строку */
+        white-space: nowrap;
+        max-width: 100%;
+    }
+
+    .dropdown-menu {
+        /* оставляем абсолютное позиционирование, чтобы можно было центрировать */
+        position: absolute;
+        margin-top: 0.5rem;
+        left: 50% !important;
+        transform: translateX(-50%);
+        width: auto; /* не растягиваем на всю ширину */
+        max-width: 90vw; /* защита от выхода за экран */
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    header h1 {
+        text-align: center;
+    }
+
+    /* только верхняя полоска (с границей) — складываем элементы в колонку */
+    header .border-b .flex {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    #card-container {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    main {
+        padding: 1rem;
+    }
+
+    #header {
+        display: none;
+    }
+
+    #toggle-header-button {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        border-radius: 50%;
+        width: 3rem;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #4b5563;
+        color: #fff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 50;
+        transition: background-color 0.3s ease;
+    }
+
+    #toggle-header-button:hover {
+        background-color: #374151;
+    }
+
+    .header-button {
+        border-radius: 1rem;
+        padding: 0.5rem 1rem;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #4b5563;
+        color: #fff;
+        font-size: 0.875rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .header-button:hover {
+        background-color: #374151;
+    }
+    /* растягиваем контейнер с CTA-кнопками на всю ширину, чтобы сами кнопки (width:100%) заняли строку */
+    header .border-b .container > .flex { width: 100%; }
+
+    /* второй ряд в шапке (Layer7/Layer4) — в одну строку на мобилке */
+    #header > .bg-gray-800:last-child .container {
+        display: flex;
+        flex-direction: row !important;
+        justify-content: center;
+        gap: 0.75rem;
+        flex-wrap: nowrap;
+    }
+    #header > .bg-gray-800:last-child .container .group { margin-bottom: 0 !important; }
+}
+
+/* Main layout - allow flex parent (body) to control height */
+main {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto; /* разрешаем скроллинг если нужно */
+}
+
+/* Top banners - fixed height */
+main > .flex-shrink-0 {
+    flex-shrink: 0;
+}
+
+/* Charts section - fill remaining space */
+main > .flex-1 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+    overflow: visible; /* позволяем контенту быть видимым */
+}
+
+/* Chart containers - fill available height provided by JS */
+.chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 150px; /* адаптивный минимум */
+    overflow: hidden; /* prevent canvas from overflowing the card */
+}
+
+.chart-wrapper--l4 {
+    min-height: 120px; /* минимум для L4 графиков */
+}
+
+.chart-canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+/* Ensure chart cards never visually overflow and padding counts into height */
+.card--chart {
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+/* Allow charts section and its children to stretch properly */
+#charts-section {
+    min-height: 0;
+    max-height: 100%; /* не превышать доступное пространство */
+    overflow: visible;
+}
+
+#card-container {
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    overflow: visible;
+}
+
+
+
+.card--chart .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.card--chart .chart-wrapper {
+    flex: 1;
+}
+
+/* Mobile: stack L4 charts vertically and use natural height */
+@media (max-width: 768px) {
+    /* Секции и контейнеры: позволяем контенту растягиваться и выталкивать баннеры вниз */
+    #charts-section { 
+        min-height: 0;
+        max-height: none;
+    }
+    #card-container { 
+        height: auto;
+        max-height: none;
+    }
+    #layer4-container,
+    #layer7-container { 
+        height: auto !important;
+        max-height: none;
+    }
+    #layer4-container {
+        padding-bottom: 1.5rem; /* доп. пространство перед баннерами */
+    }
+    #layer4-container .card--chart {
+        height: auto; /* let content define height on mobile */
+    }
+    /* Отключаем flex-растяжение внутри карточек, чтобы работал aspect-ratio */
+    .card--chart .card-body { flex: 0 0 auto; }
+    .card--chart .chart-wrapper { flex: 0 0 auto; }
+    #layer4-container .card--chart .card-body {
+        margin-top: 0.25rem; /* tighter spacing on mobile */
+    }
+    /* Allow charts to shrink on small screens instead of being clipped */
+    .chart-wrapper {
+        height: auto !important; /* override 100% */
+        min-height: 220px;
+        max-height: none;
+    }
+    .chart-wrapper--l4 {
+        min-height: 170px;
+        max-height: none;
+    }
+}
+
+/* max-heights removed in favor of JS-calculated exact heights */
+
+/* --- Header CTA buttons (unified style) --- */
+.btn-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.25rem; /* 36px */
+    padding: 0 0.875rem;
+    border-radius: 0.25rem; /* closer to rounded */
+    background: transparent;
+    color: #e5e7eb; /* text-gray-200 */
+    border: 1px solid #374151; /* gray-700 */
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.btn-cta:hover {
+    background-color: #374151; /* gray-700 */
+    border-color: #4b5563;     /* gray-600 */
+}
+.btn-cta:active {
+    background-color: #303644;
+}
+/* remove external icon for a cleaner, neutral look */
+.btn-cta--external::after { display: none; }
+
+/* Tighter spacing on small screens */
+@media (max-width: 768px) {
+    .btn-cta {
+        width: 100%;
+        height: 2.5rem;
+    }
+}
+
+/* центрируем выпадающие меню под кнопками на всех размерах */
+#layer7-dropdown-menu,
+#layer4-dropdown-menu {
+    left: 50% !important;
+    transform: translateX(-50%);
+}
